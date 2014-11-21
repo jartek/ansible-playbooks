@@ -24,6 +24,7 @@
     - include: setup.yml
     - include: postgres.yml
     - include: redis.yml
+    - include: nginx.yml
     - include: supervisor.yml
 
   roles:
