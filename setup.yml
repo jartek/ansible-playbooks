@@ -5,10 +5,11 @@
   apt: upgrade=safe
 
 - name: install core packages
-  apt: pkg={{ item }}
+  apt: "pkg={{ item }} state=installed"
   with_items:
     - build-essential
     - git-core
+    - vim
     - libxml2-dev
     - nodejs
     - git-core

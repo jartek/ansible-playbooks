@@ -1,6 +1,7 @@
 ---
 - hosts: all
   gather_facts: no
+  sudo: true
 
   vars:
     app_name: shop
@@ -22,10 +23,12 @@
   tasks:
     - include: setup.yml
     - include: postgres.yml
+    - include: redis.yml
+    - include: supervisor.yml
 
   roles:
     - rvm_io.rvm1-ruby
 
   handlers:
-    - name: Restart ssh
-      action: service name=ssh state=restarted
+    - name: Restart supervisor
+      action: service name=supervisor state=restarted

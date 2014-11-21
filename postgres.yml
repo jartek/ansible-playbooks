@@ -1,22 +1,22 @@
 ---
   - name: install postgres
-    apt: pkg={{ item }}
+    apt: "pkg={{ item }} state=installed"
     with_items:
       - postgresql-9.3
       - libpq-dev
       - python-psycopg2
 
-  - name: ensure postgresql service up and running
+  - name: ensure postgresql service is up and running
     service: name=postgresql enabled=yes state=started
 
   - name: ensure database is created
     sudo_user: postgres
-    postgresql_db: name={{ db_name }}
+    postgresql_db: "name={{ db_name }}"
 
   - name: ensure user has access to database
     sudo_user: postgres
-    postgresql_user: db={{ db_name }} name={{ db_user }} password={{ db_password }} priv=ALL
+    postgresql_user: "db={{ db_name }} name={{ db_user }} password={{ db_password }} priv=ALL"
 
   - name: ensure user does not have unnecessary privilege
     sudo_user: postgres
-    postgresql_user: name={{ db_user }} role_attr_flags=NOSUPERUSER,NOCREATEDB
+    postgresql_user: "name={{ db_user }} role_attr_flags=NOSUPERUSER,NOCREATEDB"
