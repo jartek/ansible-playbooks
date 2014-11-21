@@ -1,0 +1,31 @@
+---
+- hosts: all
+  gather_facts: no
+
+  vars:
+    app_name: shop
+    user: app
+    user_password: "{{ lookup('password', 'credentials/deploy.crypted') }}"
+    deploy_to: "/home/{{ user }}/app"
+    rails_env: "production"
+
+    db_name: "{{ app_name }}_{{ rails_env }}"
+    db_user: "app"
+    db_password: "{{ lookup('password', 'credentials/' + rails_env + '.postgres length=30') }}"
+
+    ruby_version: 2.1.5
+    rvm1_rubies:
+      - '2.1.5'
+    rvm1_install_path: '/home/travis/.rvm'
+    rvm1_install_flags: '--auto-dotfiles --user-install'
+
+  tasks:
+    - include: setup.yml
+    - include: postgres.yml
+
+  roles:
+    - rvm_io.rvm1-ruby
+
+  handlers:
+    - name: Restart ssh
+      action: service name=ssh state=restarted
