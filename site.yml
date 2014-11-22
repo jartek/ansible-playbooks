@@ -31,5 +31,8 @@
     - rvm_io.rvm1-ruby
 
   handlers:
+    - name: Restart ssh
+      service: name=nginx enabled=yes state=restarted
+
     - name: Restart supervisor
       action: service name=supervisor state=restarted
