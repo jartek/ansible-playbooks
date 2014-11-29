@@ -1,13 +1,12 @@
 ---
 - hosts: all
-  gather_facts: no
-  sudo: true
+  sudo: True
+  user: app
 
   vars:
     app_name: shop
     user: app
     user_password: "{{ lookup('password', 'credentials/deploy.crypted') }}"
-    deploy_to: "/home/{{ user }}/app"
     rails_env: "production"
 
     db_name: "{{ app_name }}_{{ rails_env }}"
@@ -17,22 +16,37 @@
     ruby_version: 2.1.5
     rvm1_rubies:
       - '2.1.5'
-    rvm1_install_path: '/home/travis/.rvm'
+    rvm1_install_path: '/home/app/.rvm'
     rvm1_install_flags: '--auto-dotfiles --user-install'
+
+    postgresql_databases:
+      - name: "{{ db_name }}"
+        hstore: no
+        uuid_ossp: no
+
+    postgresql_users:
+      - name: "{{ db_user }}"
+        pass: "{{ db_password }}"
+        encrypted: no
+
+    postgresql_user_privileges:
+      - name: "{{ db_user }}"
+        db: "{{ db_name }}"
+        priv: "ALL"
 
   tasks:
     - include: setup.yml
     - include: postgres.yml
     - include: redis.yml
     - include: nginx.yml
-    - include: supervisor.yml
+    - include: bundler.yml
+    - name: Copy unicorn upstart
+      copy: src=templates/unicorn.production.upstart.conf dest=/etc/init/unicorn.conf
 
   roles:
     - rvm_io.rvm1-ruby
+    - ANXS.postgresql
 
   handlers:
     - name: Restart ssh
       service: name=nginx enabled=yes state=restarted
-
-    - name: Restart supervisor
-      action: service name=supervisor state=restarted

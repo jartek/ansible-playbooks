@@ -2,5 +2,17 @@
   - name: install nginx package
     apt: pkg=nginx state=installed
 
-  - name: ensure nginx service is up and running
-    service: name=nginx enabled=yes state=started
+  - name: remove default nginx site
+    file: "path=/etc/nginx/{{item}}/default state=absent"
+    with_items:
+      - sites-enabled
+      - sites-available
+
+  - name: copy nginx conf
+    copy: "src=templates/shop.nginx.conf dest={{ item }}"
+    with_items:
+      - /etc/nginx/sites-enabled/
+      - /etc/nginx/sites-available/
+
+  - name: copy upstart script
+    copy: "src=templates/nginx.upstart.conf dest=/etc/init/nginx.conf"

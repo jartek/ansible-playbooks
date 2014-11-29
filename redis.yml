@@ -4,5 +4,5 @@
     with_items:
       - redis-server
 
-  - name: Start Redis
-    service: name=redis-server state=started
+  - name: copy redis upstart
+    copy: src=templates/redis.upstart.conf dest=/etc/init/redis.conf
