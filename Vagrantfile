@@ -12,7 +12,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     v.cpus = 2
   end
 
-  config.vm.network :forwarded_port, guest: 80, host: 3000
+  config.vm.network :forwarded_port, guest: 3000, host: 3000
 
   config.vm.synced_folder '.', '/vagrant', disabled: true
   config.vm.synced_folder '.', '/home/vagrant/shop'
