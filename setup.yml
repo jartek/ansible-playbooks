@@ -16,3 +16,6 @@
     - curl
     - python-dev
     - libpq-dev
+
+- name: Copy unicorn upstart
+  copy: src=templates/unicorn.production.upstart.conf dest=/etc/init/unicorn.conf

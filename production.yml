@@ -1,7 +1,6 @@
 ---
 - hosts: all
   sudo: True
-  user: app
 
   vars:
     app_name: shop
@@ -10,7 +9,7 @@
     rails_env: "production"
 
     db_name: "{{ app_name }}_{{ rails_env }}"
-    db_user: "app"
+    db_user: "{{user}}"
     db_password: "{{ lookup('password', 'credentials/' + rails_env + '.postgres length=30') }}"
 
     ruby_version: 2.1.5
@@ -35,13 +34,12 @@
         priv: "ALL"
 
   tasks:
+    - include: user.yml
     - include: setup.yml
     - include: postgres.yml
     - include: redis.yml
     - include: nginx.yml
     - include: bundler.yml
-    - name: Copy unicorn upstart
-      copy: src=templates/unicorn.production.upstart.conf dest=/etc/init/unicorn.conf
 
   roles:
     - rvm_io.rvm1-ruby

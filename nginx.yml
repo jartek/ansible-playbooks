@@ -9,10 +9,10 @@
       - sites-available
 
   - name: copy nginx conf
-    copy: "src=templates/shop.nginx.conf dest={{ item }}"
+    copy: "src=templates/shop.nginx.{{ rails_env }}.conf dest={{ item }}"
     with_items:
-      - /etc/nginx/sites-enabled/
-      - /etc/nginx/sites-available/
+      - /etc/nginx/sites-enabled/default.conf
+      - /etc/nginx/sites-available/default.conf
 
   - name: copy upstart script
     copy: "src=templates/nginx.upstart.conf dest=/etc/init/nginx.conf"
