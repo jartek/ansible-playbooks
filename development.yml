@@ -40,10 +40,17 @@
     - include: redis.yml
     - include: nginx.yml
     - include: bundler.yml
+
+    - name: Create shared directory
+      file: 'path=/home/{{user}}/shared/{{item}} state=directory owner={{user}} group=root'
+      with_items:
+      - pids
+      - log
+      - sockets
+
     - name: Copy unicorn upstart
       copy: src=templates/unicorn.development.upstart.conf dest=/etc/init/unicorn.conf
       notify: restart unicorn
-
 
   roles:
     - rvm_io.rvm1-ruby

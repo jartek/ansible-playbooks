@@ -8,14 +8,14 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "ubuntu/trusty64"
 
   config.vm.provider "virtualbox" do |v|
-    v.memory = 512
+    v.memory = 2048
     v.cpus = 2
   end
 
   config.vm.network :forwarded_port, guest: 3000, host: 3000
 
   config.vm.synced_folder '.', '/vagrant', disabled: true
-  config.vm.synced_folder '.', '/home/vagrant/shop'
+  config.vm.synced_folder '.', '/home/vagrant/shop/current'
 
   config.vm.provision "ansible" do |ansible|
     ansible.playbook = "config/ansible-playbooks/development.yml"

@@ -5,3 +5,10 @@
 - name: Add user to rvm group
   sudo: True
   shell: usermod -a -G rvm {{ user }}
+
+- name: add rvm to bash
+  shell: echo "source $HOME/.rvm/scripts/rvm" >> ~/.bashrc
+
+- name: own the rvm directory
+  sudo: True
+  shell: "chown {{ user }}:root -R /home/{{ user }}/.rvm"
